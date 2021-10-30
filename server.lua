@@ -58,10 +58,11 @@ RegisterNetEvent('qb-djbooth:server:changeVolume', function(volume, zoneName)
     local ped = GetPlayerPed(src)
     local coords = GetEntityCoords(ped)
     local boothCoords = Config.Locations[zoneName].coords
+    local volumesend = volume / 100
     local dist = #(coords - boothCoords)
     if dist > 3 then return end
     if not tonumber(volume) then return end
     if isPlaying then
-        xSound:setVolume(-1, zoneName, volume)
+        xSound:setVolume(-1, zoneName, volumesend)
     end
 end)
