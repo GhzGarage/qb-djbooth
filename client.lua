@@ -140,12 +140,22 @@ RegisterNetEvent('qb-djbooth:client:musicMenu', function()
                 isRequired = true,
                 name = 'song',
                 text = 'YouTube URL'
+            },
+            {
+                type = 'number', -- Give the client an option to set volume when starting music instead of ear raping them.
+                isRequired = true,
+                name = 'volume',
+                text = 'Min: 1[Off] - Max: 100[Max]'
             }
         }
     })
     if dialog then
         if not dialog.song then return end
         TriggerServerEvent('qb-djbooth:server:playMusic', dialog.song, currentZone)
+        SetTimeout(550, function() -- delayed pass to update volume after song start to ensure no errors.
+            if not dialog.volume then return end
+            TriggerServerEvent('dc-djbooth:server:changeVolume', dialog.volume, currentZone)
+        end)
     end
 end)
 
@@ -155,10 +165,10 @@ RegisterNetEvent('qb-djbooth:client:changeVolume', function()
         submitText = "Submit",
         inputs = {
             {
-                type = 'text', -- number doesn't accept decimals??
+                type = 'number', 
                 isRequired = true,
                 name = 'volume',
-                text = 'Min: 0.01 - Max: 1'
+                text = 'Min: 1[Off] - Max: 100[Max]'
             }
         }
     })
