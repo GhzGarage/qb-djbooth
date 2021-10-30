@@ -100,7 +100,7 @@ local vanilla = BoxZone:Create(Config.Locations['vanilla'].coords, 1, 1, {
 })
 
 vanilla:onPlayerInOut(function(isPointInside)
-    if isPointInside and PlayerData.job.name == Config.Locations['vanilla'].job then
+        if isPointInside and Config.Locations['craftbar'].job == "all" or PlayerData.job.name == Config.Locations['vanilla'].job then -- give people the ability to not have a job limitation by using all
         currentZone = 'vanilla'
         exports['qb-menu']:showHeader(musicHeader)
     else
@@ -115,7 +115,8 @@ local other = BoxZone:Create(Config.Locations['other'].coords, 1, 1, {
 })
 
 other:onPlayerInOut(function(isPointInside)
-    if isPointInside and PlayerData.job.name == Config.Locations['other'].job then
+        if isPointInside and Config.Locations['craftbar'].job == "all" or PlayerData.job.name == Config.Locations['other'].job then
+
         currentZone = 'other'
         exports['qb-menu']:showHeader(musicHeader)
     else
