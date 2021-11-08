@@ -6,6 +6,11 @@ local PlayerData = {}
 
 -- Handlers
 
+AddEventHandler('onResourceStart', function(resourceName)
+	if (GetCurrentResourceName() ~= resourceName) then return end
+	PlayerData = QBCore.Functions.GetPlayerData()
+end)
+
 AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
     PlayerData = QBCore.Functions.GetPlayerData()
 end)
@@ -31,66 +36,67 @@ local musicHeader = {
 
 -- Main Menu
 
-local musicMenu = {
-    {
-        isHeader = true,
-        header = '💿 | DJ Booth'
-    },
-    {
-        header = '🎶 | Play a song',
-        txt = 'Enter a youtube URL',
-        params = {
-            event = 'qb-djbooth:client:musicMenu',
-            args = {
-                currentZone = currentZone
+function createMusicMenu()
+    musicMenu = {
+        {
+            isHeader = true,
+            header = '💿 | DJ Booth'
+        },
+        {
+            header = '🎶 | Play a song',
+            txt = 'Enter a youtube URL',
+            params = {
+                event = 'qb-djbooth:client:musicMenu',
+                args = {
+                    zoneName = currentZone
+                }
             }
-        }
-    },
-    {
-        header = '⏸️ | Pause Music',
-        txt = 'Pause currently playing music',
-        params = {
-            isServer = true,
-            event = 'qb-djbooth:server:pauseMusic',
-            args = {
-                currentZone = currentZone
+        },
+        {
+            header = '⏸️ | Pause Music',
+            txt = 'Pause currently playing music',
+            params = {
+                isServer = true,
+                event = 'qb-djbooth:server:pauseMusic',
+                args = {
+                    zoneName = currentZone
+                }
             }
-        }
-    },
-    {
-        header = '▶️ | Resume Music',
-        txt = 'Resume playing paused music',
-        params = {
-            isServer = true,
-            event = 'qb-djbooth:server:resumeMusic',
-            args = {
-                currentZone = currentZone
+        },
+        {
+            header = '▶️ | Resume Music',
+            txt = 'Resume playing paused music',
+            params = {
+                isServer = true,
+                event = 'qb-djbooth:server:resumeMusic',
+                args = {
+                    zoneName = currentZone
+                }
             }
-        }
-    },
-    {
-        header = '🔈 | Change Volume',
-        txt = 'Resume playing paused music',
-        params = {
-            event = 'qb-djbooth:client:changeVolume',
-            args = {
-                currentZone = currentZone
+        },
+        {
+            header = '🔈 | Change Volume',
+            txt = 'Resume playing paused music',
+            params = {
+                event = 'qb-djbooth:client:changeVolume',
+                args = {
+                    zoneName = currentZone
+                }
             }
-        }
-    },
-    {
-        header = '❌ | Turn off music',
-        txt = 'Stop the music & choose a new song',
-        isServer = true,
-        params = {
-            isServer = true,
-            event = 'qb-djbooth:server:stopMusic',
-            args = {
-                currentZone = currentZone
+        },
+        {
+            header = '❌ | Turn off music',
+            txt = 'Stop the music & choose a new song',
+            params = {
+                isServer = true,
+                event = 'qb-djbooth:server:stopMusic',
+                args = {
+                    zoneName = currentZone
+                }
             }
         }
     }
-}
+end
 
 -- DJ Booths
 
@@ -109,24 +115,10 @@ vanilla:onPlayerInOut(function(isPointInside)
     end
 end)
 
-local other = BoxZone:Create(Config.Locations['other'].coords, 1, 1, {
-    name="other",
-    heading=0
-})
-
-other:onPlayerInOut(function(isPointInside)
-    if isPointInside and PlayerData.job.name == Config.Locations['other'].job then
-        currentZone = 'other'
-        exports['qb-menu']:showHeader(musicHeader)
-    else
-        currentZone = nil
-        exports['qb-menu']:closeMenu()
-    end
-end)
-
 -- Events
 
 RegisterNetEvent('qb-djbooth:client:playMusic', function()
+    createMusicMenu()
     exports['qb-menu']:openMenu(musicMenu)
 end)
 
