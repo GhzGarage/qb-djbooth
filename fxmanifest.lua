@@ -18,3 +18,5 @@ client_scripts {
 server_script 'server.lua'
 
 dependency 'xsound'
+
+lua54 'yes'
